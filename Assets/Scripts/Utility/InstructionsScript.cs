@@ -11,6 +11,9 @@ public class InstructionsScript : MonoBehaviour
     public GameObject endGameObject;
     public int enemiesDefeated = 0;
 
+    private TextWriter.TextWriterSingle textWriterSingle;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,20 +33,22 @@ public class InstructionsScript : MonoBehaviour
             if (this.gameObject.name == "MovementInstructions")
             {
                 instructionsPanel.SetActive(true);
+                instrucionsText.text = "Use 'A' to move left and 'D' to move right";              
             }
             else if (this.gameObject.name == "JumpInstructions")
             {
-                instrucionsText.text = "Press Spacebar to Jump";
+                instrucionsText.text = "Press 'Spacebar' to Jump";
+                
                 instructionsPanel.SetActive(true);
             }
             else if (this.gameObject.name == "DoubleJumpInstructions")
             {
-                instrucionsText.text = "Press 2X Spacebar to perform a DoubleJump";
+                instrucionsText.text = "Press '2X' Spacebar to perform a DoubleJump";
                 instructionsPanel.SetActive(true);
             }
             else if (this.gameObject.name == "CombatInstructions")
             {
-                instrucionsText.text = "Press Mouse1 to Attack";
+                instrucionsText.text = "Press 'Mouse1' to Attack";
                 instructionsPanel.SetActive(true);
             }
             else if (this.gameObject.name == "CombatInstructions2")
