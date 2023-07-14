@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class EnemyShooter : MonoBehaviour
 {
-
+    public Light2D myLight;
     public Transform player; // Reference to the player's transform
     public GameObject projectilePrefab; // Prefab of the projectile    
+    
 
 
     public float fireRate = 2f; // Time interval between each projectile instantiation
@@ -14,6 +16,9 @@ public class EnemyShooter : MonoBehaviour
     public GameObject fireEffectSFX;
     public GameObject fireEffectVFX;
     public float firingRange;
+
+    private float timeSincePlayerLeftTheRange;
+    public float lightDelay;
 
     private void Start()
     {
@@ -31,13 +36,32 @@ public class EnemyShooter : MonoBehaviour
 
     private void TryToFire()
     {
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);        
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (lastTimeShotTaken + fireRate < Time.time && distanceToPlayer <= firingRange)
+        if (distanceToPlayer <= firingRange)
         {
-            Fire();
+            myLight.gameObject.SetActive(true);
+            timeSincePlayerLeftTheRange = 0;
+
+            if (lastTimeShotTaken + fireRate < Time.time)
+            {
+                Fire();
+            }
         }
+        else
+        {
+            timeSincePlayerLeftTheRange += Time.deltaTime;
+
+            if (timeSincePlayerLeftTheRange >= lightDelay)
+            {
+                myLight.gameObject.SetActive(false);
+            }
+        }
+
+        
     }
+
+    
 
     private void RotateTowardsThePlayer()
     {
