@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,6 +72,7 @@ public class TextWriter : MonoBehaviour
         private float timePerCharacter;
         private float timer;
         private bool invisibleCharacters;
+        
 
         public TextWriterSingle(TextMeshProUGUI textToEdit, string textToWrite, float timePerCharacter, bool invisibleCharacters)
         {
@@ -100,7 +102,7 @@ public class TextWriter : MonoBehaviour
 
                 if (characterIndex >= textToWrite.Length)
                 {
-                    //Entire String displayed
+                    //Entire String displayed                    
                     return true;
                 }
             }
@@ -121,8 +123,9 @@ public class TextWriter : MonoBehaviour
 
         public void WriteAllAndDestroy()
         {
+            //write the whole text and destroy the textwriter.
             textToEdit.text = textToWrite;
-            characterIndex = textToWrite.Length;
+            characterIndex = textToWrite.Length;            
             TextWriter.RemoveWriter_Static(textToEdit);
         }
     }

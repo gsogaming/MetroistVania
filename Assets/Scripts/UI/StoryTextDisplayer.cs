@@ -5,22 +5,25 @@ using UnityEngine.UI;
 using TMPro;
 
 public class StoryTextDisplayer : MonoBehaviour
-{    
-    
+{
+
     private TextMeshProUGUI messageText;
     private int currentIndex = 0;
     private TextWriter.TextWriterSingle textWriterSingle;
-    
+
+    [SerializeField] Button continueButton;
+
 
     private void Awake()
     {
-        messageText = GetComponent<TextMeshProUGUI>();       
-        
+        messageText = GetComponent<TextMeshProUGUI>();
+
     }
 
     private void Start()
     {
-        textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, 0.1f,true,true);
+        textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, 0.1f, true, true);
+        currentIndex = 1;
     }
 
     public void AddNextMessage()
@@ -33,15 +36,27 @@ public class StoryTextDisplayer : MonoBehaviour
         {
             string[] messageArray = new string[]
                     {
-            "But, it wasn't long before we realized that",
-            "WE WERE NOT ALONE!"
-                    };            
+             //story pieces
+             //
+             "The year 2022...",
+
+            "The dawn of the advanced AI...",
+
+            "It was in its baby steps, ",
+
+            "It started as the name 'ChatGpt' ",
+
+            "We thought it would be nothing but useful",
+
+            "We simply didn't know that we were cooking our own destruction"
+                    };
             string message = messageArray[currentIndex];
             textWriterSingle = TextWriter.AddWriter_Static(messageText, message, 0.1f, true, true);
             currentIndex++;
             if (currentIndex >= messageArray.Length)
             {
                 currentIndex = 0;
+                continueButton.gameObject.SetActive(true);
             }
         }
     }
