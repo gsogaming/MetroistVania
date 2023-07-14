@@ -163,7 +163,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -294,11 +294,12 @@ MonoBehaviour:
   currentLives: 3
   maximumLives: 5
   respawnWaitTime: 3
+  isHurt: 0
   damageIndicator: {fileID: 0}
   fadeDuration: 1
   isInvincible: 0
   deathEffect: {fileID: 8947246785620148104, guid: c4d99970794d9f0468b2e2a51a6bc976, type: 3}
-  hitEffect: {fileID: 93431346535372284, guid: 7a1ea1c65fff14c41b5fafe65981feae, type: 3}
+  hitEffectSFX: {fileID: 0}
 --- !u!61 &1738877542591755924
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -530,6 +531,9 @@ MonoBehaviour:
   dealDamageOnTriggerEnter: 1
   dealDamageOnTriggerStay: 0
   dealDamageOnCollision: 0
+  damageVFX: {fileID: 0}
+  damageSFX: {fileID: 0}
+  vfxLocation: {fileID: 0}
 --- !u!60 &6475037679331447653
 PolygonCollider2D:
   m_ObjectHideFlags: 0
