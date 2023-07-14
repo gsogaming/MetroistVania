@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 4163990197332859268, guid: 568de1311786bef4d97a0be7d81e5243, type: 3}
+      propertyPath: transition
+      value: 
+      objectReference: {fileID: 1814557549}
     - target: {fileID: 4163990197332859269, guid: 568de1311786bef4d97a0be7d81e5243, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -715,7 +719,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 134, y: -100.84788}
+  m_AnchoredPosition: {x: 134, y: -134}
   m_SizeDelta: {x: -602.2558, y: -287.3145}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &510941613
@@ -771,7 +775,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: MainMenu
+          m_StringArgument: Level1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &510941614
@@ -953,7 +957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 66}
   m_SizeDelta: {x: 572.0264, y: 144.3166}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &865100701
@@ -1305,9 +1309,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5378158437476765107, guid: 138f4002f44d8d24791dd43c8eae4e95, type: 3}
+      propertyPath: m_Volume
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5378158437476765107, guid: 138f4002f44d8d24791dd43c8eae4e95, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: d0bf1437f6cbd164baba5d661ba6e976, type: 3}
+      objectReference: {fileID: 8300000, guid: 4de045a324ff0d249abefe49461057d0, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 138f4002f44d8d24791dd43c8eae4e95, type: 3}
 --- !u!1 &1324385379
@@ -1471,7 +1479,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1633,6 +1641,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654461982}
   m_CullTransparentMesh: 1
+--- !u!95 &1814557549 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6908464614970114624, guid: b2e2236f532ac3743a59152a1065063e, type: 3}
+  m_PrefabInstance: {fileID: 144814506}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1197867711473683264
 PrefabInstance:
   m_ObjectHideFlags: 0
