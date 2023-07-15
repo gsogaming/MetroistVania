@@ -43,7 +43,7 @@ public class Interactable : MonoBehaviour
         {
             
             messagePanel.SetActive(true);
-            messageText.text = "Fabric of reality is not as gruesome as you think here";
+            messageText.text = "Fabric of Reality...";
             textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, 0.1f, true, true);
         }        
     }
