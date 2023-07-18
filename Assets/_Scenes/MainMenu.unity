@@ -749,7 +749,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4701486191432077158, guid: c45041f43743ded48bcedcf90819a218, type: 3}
       propertyPath: m_Spacing.y
-      value: 30
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4701486191432077158, guid: c45041f43743ded48bcedcf90819a218, type: 3}
+      propertyPath: m_StartAxis
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4701486191432077158, guid: c45041f43743ded48bcedcf90819a218, type: 3}
       propertyPath: m_CellSize.x
@@ -757,7 +761,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4701486191432077158, guid: c45041f43743ded48bcedcf90819a218, type: 3}
       propertyPath: m_CellSize.y
-      value: 30
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4701486191432077158, guid: c45041f43743ded48bcedcf90819a218, type: 3}
+      propertyPath: m_Constraint
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4701486191432077158, guid: c45041f43743ded48bcedcf90819a218, type: 3}
+      propertyPath: m_StartCorner
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4701486191432077158, guid: c45041f43743ded48bcedcf90819a218, type: 3}
+      propertyPath: m_ConstraintCount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4701486191432077161, guid: c45041f43743ded48bcedcf90819a218, type: 3}
       propertyPath: m_SizeDelta.x
