@@ -29,6 +29,8 @@ public class Damage : MonoBehaviour
     public GameObject damageSFX;
     public Transform vfxLocation;
 
+    
+
 
 
 
