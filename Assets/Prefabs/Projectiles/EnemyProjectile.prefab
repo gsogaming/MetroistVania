@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 5
-  hitVfx: {fileID: 100008, guid: 7e60b394ca1a53242bdbce72432ccafb, type: 3}
+  hitVfx: {fileID: 3702921670824913868, guid: d81a0f6858c96a948bbcea61dc312309, type: 3}
   hitSfx: {fileID: 2058589310810668998, guid: d31f38d8f3dfdb3439933da0aaad158e, type: 3}
 --- !u!50 &8202466631644867216
 Rigidbody2D:
