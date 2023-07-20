@@ -6,9 +6,12 @@ using TMPro;
 
 public class Interactable : MonoBehaviour
 {
-    [SerializeField] GameObject messagePanel;
+    [SerializeField] GameObject messagePanel; 
     [SerializeField] TextMeshProUGUI messageText;
-    private TextWriter.TextWriterSingle textWriterSingle;
+    private TextWriter.TextWriterSingle textWriterSingle;    
+    [Range(0f, 3f)] // This sets the range of the slider to be between 0 and 3    
+    [SerializeField] float writeSpeed;
+    string storedText;
 
     private void Awake()
     {
@@ -19,7 +22,8 @@ public class Interactable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, 0.1f, true, true);
+        textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, writeSpeed, true, true);
+        storedText = messageText.text;
     }
 
     // Update is called once per frame
@@ -27,7 +31,9 @@ public class Interactable : MonoBehaviour
     {
         if (!textWriterSingle.IsActive() && this.gameObject.tag == "Prop")
         {
-            textWriterSingle = TextWriter.AddWriter_Static(messageText, "BLA BLA BLA BLA BLA BLA BLA BLA", 0.1f, true, true);
+                                 
+            textWriterSingle = TextWriter.AddWriter_Static(messageText, storedText, writeSpeed, true, true);
+            
         }
         else
         {
@@ -42,9 +48,8 @@ public class Interactable : MonoBehaviour
         if (collision.tag == "Player")
         {
             
-            messagePanel.SetActive(true);
-            messageText.text = "Fabric of Reality...";
-            textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, 0.1f, true, true);
+            messagePanel.SetActive(true);            
+            textWriterSingle = TextWriter.AddWriter_Static(messageText, storedText, 0.1f, true, true);
         }        
     }
 
