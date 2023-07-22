@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5156713878411116318}
   - component: {fileID: 5551484875422292718}
   - component: {fileID: 195069002254415102}
+  - component: {fileID: 7802007048196371891}
   m_Layer: 0
   m_Name: PlayerHurtEffect
   m_TagString: Untagged
@@ -28,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 58.416534, y: -5.0729294, z: -0.070677035}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -142,3 +144,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7802007048196371891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974597197790900897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f555915267548bc40bd8ba3c98663333, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeSettings: {fileID: 11400000, guid: 8f40961c36368374b9160470a7fa1ca9, type: 2}
+  VolumeSlider: {fileID: 0}

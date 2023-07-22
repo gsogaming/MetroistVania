@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5156713878411116318}
   - component: {fileID: 5551484875422292718}
   - component: {fileID: 195069002254415102}
+  - component: {fileID: -7641732693517513410}
   m_Layer: 0
   m_Name: PlayerAttackHitEffect
   m_TagString: Untagged
@@ -143,3 +144,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-7641732693517513410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974597197790900897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f555915267548bc40bd8ba3c98663333, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeSettings: {fileID: 11400000, guid: 8f40961c36368374b9160470a7fa1ca9, type: 2}
+  VolumeSlider: {fileID: 0}
