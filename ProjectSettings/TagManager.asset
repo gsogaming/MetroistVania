@@ -9,6 +9,9 @@ TagManager:
   - FxTemporaire
   - EnemyProjectile
   - Prop
+  - Music
+  - SFX
+  - UI
   layers:
   - Default
   - TransparentFX

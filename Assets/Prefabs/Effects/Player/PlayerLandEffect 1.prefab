@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5947193136130277775}
   m_Layer: 0
   m_Name: PlayerLandEffect 1
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,4 +157,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumeSettings: {fileID: 11400000, guid: 8f40961c36368374b9160470a7fa1ca9, type: 2}
-  VolumeSlider: {fileID: 0}
+  MusicVolumeSlider: {fileID: 0}
+  SFXVolumeSlider: {fileID: 0}

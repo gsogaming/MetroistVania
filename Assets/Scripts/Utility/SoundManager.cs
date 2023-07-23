@@ -9,11 +9,17 @@ public class SoundManager : MonoBehaviour
 
     private AudioSource gameMusicAudioSource;
 
-    public Slider VolumeSlider;
+    public Slider MusicVolumeSlider;
+    public Slider SFXVolumeSlider;
 
     private void Awake()
     {
         gameMusicAudioSource = GetComponent<AudioSource>();
+        if (this.gameObject.tag == "UI")
+        {
+            MusicVolumeSlider.value = volumeSettings.musicVolumeLevel;
+            SFXVolumeSlider.value = volumeSettings.soundFXVolumeLevel;
+        }
         UpdateVolume();        
     }
     private void Update()
@@ -25,11 +31,26 @@ public class SoundManager : MonoBehaviour
 
     public void UpdateVolume()
     {
-        if (VolumeSlider != null)
+        if (MusicVolumeSlider != null)
         {
-            volumeSettings.musicVolumeLevel = VolumeSlider.value;
+            volumeSettings.musicVolumeLevel = MusicVolumeSlider.value;
+        }
+
+        if (SFXVolumeSlider != null)
+        {
+            volumeSettings.soundFXVolumeLevel = SFXVolumeSlider.value;
+        }
+
+        if (this.gameObject.tag == "Music")
+        {
+            gameMusicAudioSource.volume = volumeSettings.musicVolumeLevel;
+        }
+
+        if (this.gameObject.tag == "SFX")
+        {
+            gameMusicAudioSource.volume = volumeSettings.soundFXVolumeLevel;
         }
         
-        gameMusicAudioSource.volume = volumeSettings.musicVolumeLevel;
+        
     }
 }
