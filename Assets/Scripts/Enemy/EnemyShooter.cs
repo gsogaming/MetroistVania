@@ -36,27 +36,30 @@ public class EnemyShooter : MonoBehaviour
 
     private void TryToFire()
     {
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-
-        if (distanceToPlayer <= firingRange)
+        if (player != null)
         {
-            myLight.gameObject.SetActive(true);
-            timeSincePlayerLeftTheRange = 0;
+            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-            if (lastTimeShotTaken + fireRate < Time.time)
+            if (distanceToPlayer <= firingRange)
             {
-                Fire();
-            }
-        }
-        else
-        {
-            timeSincePlayerLeftTheRange += Time.deltaTime;
+                myLight.gameObject.SetActive(true);
+                timeSincePlayerLeftTheRange = 0;
 
-            if (timeSincePlayerLeftTheRange >= lightDelay)
-            {
-                myLight.gameObject.SetActive(false);
+                if (lastTimeShotTaken + fireRate < Time.time)
+                {
+                    Fire();
+                }
             }
-        }
+            else
+            {
+                timeSincePlayerLeftTheRange += Time.deltaTime;
+
+                if (timeSincePlayerLeftTheRange >= lightDelay)
+                {
+                    myLight.gameObject.SetActive(false);
+                }
+            }
+        }       
 
         
     }
