@@ -182,6 +182,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         SetupRigidbody();
+        SetupHealth();
         SetUpInputManager();
     }
 
@@ -604,9 +605,9 @@ public class PlayerController : MonoBehaviour
 
     private void SetupHealth()
     {
-        if (playerRigidbody == null)
+        if (playerHealth == null)
         {
-            playerRigidbody = GetComponent<Rigidbody2D>();
+            playerHealth = GetComponent<Health>();
         }
     }
 
