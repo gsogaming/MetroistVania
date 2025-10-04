@@ -15,6 +15,12 @@ public class InputManager : MonoBehaviour
     [Tooltip("Whether or not the fire button is being held")]
     public bool attackHeld;
 
+    [Header("Dash Input")]
+    [Tooltip("Whether or not the dash button was pressed this frame")]
+    public bool dashStarted;
+    [Tooltip("Whether or not the dash button is being held")]
+    public bool dashHeld;
+
 
     // A global instance for scripts to reference
     public static InputManager instance;
@@ -60,6 +66,9 @@ public class InputManager : MonoBehaviour
 
         attackStarted = default;
         attackHeld = default;
+
+        dashStarted = default;
+        dashHeld = default;
 
         jumpStarted = default;
         jumpHeld = default;
@@ -113,6 +122,24 @@ public class InputManager : MonoBehaviour
             StartCoroutine("ResetJumpStart");
         } 
     }
+
+    /// <summary>
+    /// Description:
+    /// Reads and stores the dash input
+    /// Input:
+    /// CallbackContext callbackContext
+    /// Return:
+    /// void (no return)
+    /// </summary>
+    public void GetDashInput(InputAction.CallbackContext callbackContext)
+    {
+        dashStarted = !callbackContext.canceled;
+        dashHeld = !callbackContext.canceled;
+        if (InputManager.instance.isActiveAndEnabled)
+        {
+            StartCoroutine("ResetDashStart");
+        }
+    }
     /// <summary>
     /// Description
     /// Coroutine that resets the fire pressed variable after one frame
@@ -126,6 +153,12 @@ public class InputManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         attackStarted = false;
+    }
+
+    private IEnumerator ResetDashStart()
+    {
+        yield return new WaitForEndOfFrame();
+        dashStarted = false;
     }
 
 

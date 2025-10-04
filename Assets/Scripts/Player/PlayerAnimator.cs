@@ -13,6 +13,10 @@ public class PlayerAnimator : MonoBehaviour
     public PlayerController playerController;
     [Tooltip("The animator component that controls the player's animations")]
     public Animator animator;
+    [Tooltip("Multiplier applied to the animator speed while dashing.")]
+    public float dashAnimationSpeedMultiplier = 2.0f;
+
+    private float defaultAnimatorSpeed = 1.0f;
 
     /// <summary>
     /// Description:
@@ -24,6 +28,11 @@ public class PlayerAnimator : MonoBehaviour
     /// </summary>
     void Start()
     {
+        if (animator != null)
+        {
+            defaultAnimatorSpeed = animator.speed;
+        }
+
         ReadPlayerStateAndAnimate();
     }
 
@@ -54,6 +63,16 @@ public class PlayerAnimator : MonoBehaviour
         {
             return;
         }
+
+        if (playerController.state == PlayerController.PlayerState.Dash)
+        {
+            animator.speed = defaultAnimatorSpeed * dashAnimationSpeedMultiplier;
+        }
+        else
+        {
+            animator.speed = defaultAnimatorSpeed;
+        }
+
         if (playerController.state == PlayerController.PlayerState.Idle)
         {
             animator.SetBool("isIdle", true);
@@ -81,7 +100,8 @@ public class PlayerAnimator : MonoBehaviour
             animator.SetBool("isFalling", false);
         }
 
-        if (playerController.state == PlayerController.PlayerState.Walk)
+        if (playerController.state == PlayerController.PlayerState.Walk ||
+            playerController.state == PlayerController.PlayerState.Dash)
         {
             animator.SetBool("isWalking", true);
         }

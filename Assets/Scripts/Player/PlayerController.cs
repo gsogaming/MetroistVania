@@ -112,6 +112,21 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public bool dashInput
+    {
+        get
+        {
+            if (inputManager != null)
+            {
+                return inputManager.dashStarted;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
     #endregion
     #endregion
 
@@ -146,7 +161,26 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    
+
+    #region Dash Variables
+    [Header("Dash Settings")]
+    [Tooltip("Horizontal speed applied while dashing.")]
+    public float dashSpeed = 12.0f;
+    [Tooltip("Duration of the dash in seconds.")]
+    public float dashDuration = 0.2f;
+    [Tooltip("Cooldown time before another dash can be triggered.")]
+    public float dashCooldown = 0.5f;
+    [Tooltip("Whether the player can dash while airborne.")]
+    public bool allowAirDash = true;
+    [Tooltip("Optional effect spawned when the player begins a dash.")]
+    public GameObject dashEffect = null;
+
+    private bool isDashing = false;
+    private float dashCooldownTimer = 0.0f;
+    private Coroutine dashRoutine = null;
+    #endregion
+
+
 
     #region Player State Variables
     /// <summary>
@@ -158,6 +192,7 @@ public class PlayerController : MonoBehaviour
         Walk,
         Jump,
         Fall,
+        Dash,
         Dead,
         Attack,
         Attack2,
@@ -182,9 +217,9 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         SetupRigidbody();
+        SetupHealth();
         SetUpInputManager();
     }
-
     /// <summary>
     /// Description:
     /// Standard Unity function called once every frame after update
@@ -196,9 +231,18 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
+        UpdateDashTimers();
         ProcessInput();
         HandleDirection();
         DetermineState();
+    }
+
+    private void UpdateDashTimers()
+    {
+        if (dashCooldownTimer > 0.0f)
+        {
+            dashCooldownTimer = Mathf.Max(0.0f, dashCooldownTimer - Time.deltaTime);
+        }
     }
     #endregion
 
@@ -211,6 +255,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void ProcessInput()
     {
+        HandleDashInput();
         HandleMovementInput();
         HandleJumpInput();
         HandleAttackInput();
@@ -224,6 +269,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleMovementInput()
     {
+        if (isDashing)
+        {
+            return;
+        }
+
         if (!playerHealth.isHurt)
         {
             Vector2 movementForce = Vector2.zero;
@@ -285,6 +335,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleJumpInput()
     {
+        if (isDashing)
+        {
+            return;
+        }
+
         if (jumpInput)
         {
             StartCoroutine("Jump", 1.0f);
@@ -355,6 +410,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void Bounce()
     {
+        StopDash();
         timesJumped = 0;
         if (inputManager.jumpHeld)
         {
@@ -400,10 +456,13 @@ public class PlayerController : MonoBehaviour
     /// 
     private void HandleAttackInput()
     {
+        if (isDashing)
+        {
+            return;
+        }
 
         if (isAttacking)
         {
-
             if (facing == PlayerDirection.Right)
             {
                 MovePlayer(Vector2.right);
@@ -413,6 +472,86 @@ public class PlayerController : MonoBehaviour
                 MovePlayer(Vector2.left);
             }
         }
+    }
+
+    private void HandleDashInput()
+    {
+        if (!dashInput || isDashing)
+        {
+            return;
+        }
+
+        if (dashCooldownTimer > 0.0f)
+        {
+            return;
+        }
+
+        if (!grounded && !allowAirDash)
+        {
+            return;
+        }
+
+        if (playerHealth.currentHealth <= 0 || playerHealth.isHurt)
+        {
+            return;
+        }
+
+        if (dashRoutine != null)
+        {
+            StopCoroutine(dashRoutine);
+        }
+
+        dashRoutine = StartCoroutine(DashRoutine());
+    }
+
+    private IEnumerator DashRoutine()
+    {
+        isDashing = true;
+        dashCooldownTimer = dashCooldown;
+
+        float dashDirection = GetDashDirection();
+        SpawnDashEffect();
+
+        float elapsed = 0.0f;
+        while (elapsed < dashDuration)
+        {
+            float verticalVelocity = playerRigidbody.velocity.y;
+            playerRigidbody.velocity = new Vector2(dashDirection * dashSpeed, verticalVelocity);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        isDashing = false;
+        dashRoutine = null;
+    }
+
+    private float GetDashDirection()
+    {
+        if (Mathf.Abs(horizontalMovementInput) > 0.01f)
+        {
+            return Mathf.Sign(horizontalMovementInput);
+        }
+
+        return facing == PlayerDirection.Left ? -1.0f : 1.0f;
+    }
+
+    private void SpawnDashEffect()
+    {
+        if (dashEffect != null)
+        {
+            Instantiate(dashEffect, transform.position, transform.rotation, null);
+        }
+    }
+
+    private void StopDash()
+    {
+        if (dashRoutine != null)
+        {
+            StopCoroutine(dashRoutine);
+            dashRoutine = null;
+        }
+
+        isDashing = false;
     }
 
     /// <summary>
@@ -436,18 +575,16 @@ public class PlayerController : MonoBehaviour
 
     public void IsHurt()
     {
-       
+        StopDash();
 
-            if (facing == PlayerDirection.Right)
-            {
-                playerRigidbody.AddForce(new Vector2(-10, 20), ForceMode2D.Impulse);
-            }
-            else
-            {
-                playerRigidbody.AddForce(new Vector2(10, 20), ForceMode2D.Impulse);
-            }
-        
-        
+        if (facing == PlayerDirection.Right)
+        {
+            playerRigidbody.AddForce(new Vector2(-10, 20), ForceMode2D.Impulse);
+        }
+        else
+        {
+            playerRigidbody.AddForce(new Vector2(10, 20), ForceMode2D.Impulse);
+        }
     }
 
     public void IsNotHurt()
@@ -506,82 +643,56 @@ public class PlayerController : MonoBehaviour
     {
         if (playerHealth.currentHealth <= 0)
         {
+            StopDash();
             SetState(PlayerState.Dead);
+            return;
         }
-        else if (grounded)
+
+        if (playerHealth.isHurt)
         {
-            if (!playerHealth.isHurt)
+            SetState(PlayerState.Hurt);
+            return;
+        }
+
+        if (isDashing)
+        {
+            SetState(PlayerState.Dash);
+            return;
+        }
+
+        if (attackInput)
+        {
+            SetState(PlayerState.Attack);
+            return;
+        }
+
+        if (grounded)
+        {
+            if (playerRigidbody.velocity.magnitude > 0)
             {
-                if (!attackInput)
-                {
-                    if (playerRigidbody.velocity.magnitude > 0)
-                    {
-                        SetState(PlayerState.Walk);
-                    }
-                    else
-                    {
-                        SetState(PlayerState.Idle);
-                    }
-                    if (!jumping)
-                    {
-                        timesJumped = 0;
-                    }
-                }
-                else
-                {
-                    SetState(PlayerState.Attack);
-                }
+                SetState(PlayerState.Walk);
             }
             else
             {
-                SetState(PlayerState.Hurt);
-            }                
+                SetState(PlayerState.Idle);
+            }
 
+            if (!jumping)
+            {
+                timesJumped = 0;
+            }
+            return;
         }
-        else
-        {
-            if (jumping)
-            {
-                if (!playerHealth.isHurt)
-                {
-                    if (attackInput)
-                    {
-                        SetState(PlayerState.Attack);
-                    }
-                    else
-                    {
-                        SetState(PlayerState.Jump);
-                    }
-                }
-                else
-                {
-                    SetState(PlayerState.Hurt);
-                }                             
-            }
-            else
-            {
-                if (!playerHealth.isHurt)
-                {
-                    if (attackInput)
-                    {
-                        SetState(PlayerState.Attack);
-                    }
-                    else
-                    {
-                        if (!isAttacking)
-                        {
-                            SetState(PlayerState.Fall);
-                        }
 
-                    }
-                }
-                else
-                {
-                    SetState(PlayerState.Hurt);
-                }
-                
-                
-            }
+        if (jumping)
+        {
+            SetState(PlayerState.Jump);
+            return;
+        }
+
+        if (!isAttacking)
+        {
+            SetState(PlayerState.Fall);
         }
     }
     #endregion
@@ -604,9 +715,16 @@ public class PlayerController : MonoBehaviour
 
     private void SetupHealth()
     {
-        if (playerRigidbody == null)
+        if (playerHealth != null)
         {
-            playerRigidbody = GetComponent<Rigidbody2D>();
+            return;
+        }
+
+        playerHealth = GetComponent<Health>();
+
+        if (playerHealth == null)
+        {
+            Debug.LogError("There is no Health component set up on the Player for the PlayerController to read from");
         }
     }
 
