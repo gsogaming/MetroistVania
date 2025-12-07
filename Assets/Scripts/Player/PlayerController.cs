@@ -174,10 +174,13 @@ public class PlayerController : MonoBehaviour
     public bool allowAirDash = true;
     [Tooltip("Optional effect spawned when the player begins a dash.")]
     public GameObject dashEffect = null;
+    [Tooltip("Layers the player should pass through while dashing.")]
+    public LayerMask dashClipLayerMask;
 
     private bool isDashing = false;
     private float dashCooldownTimer = 0.0f;
     private Coroutine dashRoutine = null;
+    private bool dashCollisionIgnored = false;
     #endregion
 
 
@@ -512,17 +515,25 @@ public class PlayerController : MonoBehaviour
         float dashDirection = GetDashDirection();
         SpawnDashEffect();
 
-        float elapsed = 0.0f;
-        while (elapsed < dashDuration)
-        {
-            float verticalVelocity = playerRigidbody.velocity.y;
-            playerRigidbody.velocity = new Vector2(dashDirection * dashSpeed, verticalVelocity);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
+        SetDashCollisionIgnores(true);
 
-        isDashing = false;
-        dashRoutine = null;
+        float elapsed = 0.0f;
+        try
+        {
+            while (elapsed < dashDuration)
+            {
+                float verticalVelocity = playerRigidbody.velocity.y;
+                playerRigidbody.velocity = new Vector2(dashDirection * dashSpeed, verticalVelocity);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
+        finally
+        {
+            SetDashCollisionIgnores(false);
+            isDashing = false;
+            dashRoutine = null;
+        }
     }
 
     private float GetDashDirection()
@@ -543,6 +554,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void SetDashCollisionIgnores(bool ignore)
+    {
+        if (dashCollisionIgnored == ignore)
+        {
+            return;
+        }
+
+        int playerLayer = gameObject.layer;
+        int mask = dashClipLayerMask.value;
+
+        for (int layerIndex = 0; layerIndex < 32; layerIndex++)
+        {
+            if ((mask & (1 << layerIndex)) == 0)
+            {
+                continue;
+            }
+
+            Physics2D.IgnoreLayerCollision(playerLayer, layerIndex, ignore);
+        }
+
+        dashCollisionIgnored = ignore;
+    }
+
     private void StopDash()
     {
         if (dashRoutine != null)
@@ -551,6 +585,7 @@ public class PlayerController : MonoBehaviour
             dashRoutine = null;
         }
 
+        SetDashCollisionIgnores(false);
         isDashing = false;
     }
 
@@ -572,6 +607,11 @@ public class PlayerController : MonoBehaviour
     {
         isAttacking = false;
     }   
+
+    private void OnDisable()
+    {
+        StopDash();
+    }
 
     public void IsHurt()
     {
