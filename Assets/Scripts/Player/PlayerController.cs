@@ -303,15 +303,15 @@ public class PlayerController : MonoBehaviour
         {
             float horizontalVelocity = movementForce.x;
             float verticalVelocity = 0;
-            playerRigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
+            playerRigidbody.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
         }
         else
         {
             float horizontalVelocity = movementForce.x;
-            float verticalVelocity = playerRigidbody.velocity.y;
-            playerRigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
+            float verticalVelocity = playerRigidbody.linearVelocity.y;
+            playerRigidbody.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
         }
-        if (playerRigidbody.velocity.y > 0)
+        if (playerRigidbody.linearVelocity.y > 0)
         {
             foreach (string layerName in passThroughLayers)
             {
@@ -365,7 +365,7 @@ public class PlayerController : MonoBehaviour
             jumping = true;
             float time = 0;
             SpawnJumpEffect();
-            playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, 0);
+            playerRigidbody.linearVelocity = new Vector2(playerRigidbody.linearVelocity.x, 0);
             playerRigidbody.AddForce(transform.up * jumpPower * powerMultiplier, ForceMode2D.Impulse);
             timesJumped++;
             while (time < jumpDuration)
@@ -522,8 +522,8 @@ public class PlayerController : MonoBehaviour
         {
             while (elapsed < dashDuration)
             {
-                float verticalVelocity = playerRigidbody.velocity.y;
-                playerRigidbody.velocity = new Vector2(dashDirection * dashSpeed, verticalVelocity);
+                float verticalVelocity = playerRigidbody.linearVelocity.y;
+                playerRigidbody.linearVelocity = new Vector2(dashDirection * dashSpeed, verticalVelocity);
                 elapsed += Time.deltaTime;
                 yield return null;
             }
@@ -708,7 +708,7 @@ public class PlayerController : MonoBehaviour
 
         if (grounded)
         {
-            if (playerRigidbody.velocity.magnitude > 0)
+            if (playerRigidbody.linearVelocity.magnitude > 0)
             {
                 SetState(PlayerState.Walk);
             }

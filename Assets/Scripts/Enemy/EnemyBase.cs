@@ -11,6 +11,12 @@ public abstract class EnemyBase : MonoBehaviour
     [Tooltip("How fast this enemy moves")]
     public float moveSpeed = 2f;
 
+    [Header("Hit Response Settings")]
+    [Tooltip("Whether this enemy can be pushed back when hit.")]
+    public bool canReceiveKnockback = true;
+
+    private Coroutine knockbackRoutine = null;
+
 
     /// <summary>
     /// Enum to track which state the enemy is in
@@ -86,6 +92,40 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual void MoveEnemy(Vector3 movement)
     {
         transform.position = transform.position + movement;
+    }
+
+    public virtual void ApplyKnockback(Vector2 direction, float distance, float duration)
+    {
+        if (!canReceiveKnockback || distance <= 0.0f || duration <= 0.0f)
+        {
+            return;
+        }
+
+        if (knockbackRoutine != null)
+        {
+            StopCoroutine(knockbackRoutine);
+        }
+
+        knockbackRoutine = StartCoroutine(KnockbackRoutine(direction, distance, duration));
+    }
+
+    private IEnumerator KnockbackRoutine(Vector2 direction, float distance, float duration)
+    {
+        Vector3 startPosition = transform.position;
+        Vector2 normalizedDirection = direction.sqrMagnitude > 0.0f ? direction.normalized : Vector2.right;
+        Vector3 endPosition = startPosition + (Vector3)(normalizedDirection * distance);
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / duration);
+            transform.position = Vector3.Lerp(startPosition, endPosition, progress);
+            yield return null;
+        }
+
+        transform.position = endPosition;
+        knockbackRoutine = null;
     }
 
     

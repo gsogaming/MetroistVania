@@ -16,6 +16,8 @@ public class GroundCheck : MonoBehaviour
     public LayerMask groundLayers = new LayerMask();
     [Tooltip("The collider to check with. (Defaults to the collider on this game object.)")]
     public Collider2D groundCheckCollider = null;
+    [Tooltip("How long to keep counting as grounded after a one-frame ground check miss.")]
+    public float groundedGraceTime = 0.08f;
 
     [Header("Effect Settings")]
     [Tooltip("The effect to create when landing")]
@@ -24,6 +26,7 @@ public class GroundCheck : MonoBehaviour
     // Whether or not the player was grounded last check
     [HideInInspector]
     public bool groundedLastCheck = false;
+    private float lastGroundedTime = -1.0f;
 
     /// <summary>
     /// Description:
@@ -76,8 +79,9 @@ public class GroundCheck : MonoBehaviour
         // Find the colliders that overlap this one
         Collider2D[] overlaps = new Collider2D[5];
         ContactFilter2D contactFilter = new ContactFilter2D();
-        contactFilter.layerMask = groundLayers;
-        groundCheckCollider.OverlapCollider(contactFilter, overlaps);
+        contactFilter.SetLayerMask(groundLayers);
+        contactFilter.useTriggers = false;
+        groundCheckCollider.Overlap(contactFilter, overlaps);
 
         // Check if one of the overlapping colliders is on the "ground" layer
         foreach (Collider2D overlapCollider in overlaps)
@@ -94,10 +98,17 @@ public class GroundCheck : MonoBehaviour
                         Instantiate(landingEffect, transform.position, Quaternion.identity, null);
                     }
                     groundedLastCheck = true;
+                    lastGroundedTime = Time.time;
                     return true;
                 }
             }
         }
+
+        if (Time.time - lastGroundedTime <= groundedGraceTime)
+        {
+            return true;
+        }
+
         groundedLastCheck = false;
         return false;
     }

@@ -22,14 +22,17 @@ public class Interactable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, writeSpeed, true, true);
-        storedText = messageText.text;
+        if (messageText != null)
+        {
+            textWriterSingle = TextWriter.AddWriter_Static(messageText, messageText.text, writeSpeed, true, true);
+            storedText = messageText.text;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!textWriterSingle.IsActive() && this.gameObject.tag == "Prop")
+        if (textWriterSingle != null && !textWriterSingle.IsActive() && this.gameObject.tag == "Prop")
         {
                                  
             textWriterSingle = TextWriter.AddWriter_Static(messageText, storedText, writeSpeed, true, true);
@@ -47,9 +50,7 @@ public class Interactable : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            
-            messagePanel.SetActive(true);            
-            textWriterSingle = TextWriter.AddWriter_Static(messageText, storedText, 0.1f, true, true);
+            ShowMessage();
         }        
     }
 
@@ -57,7 +58,43 @@ public class Interactable : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            messagePanel.SetActive(false);            
+            HideMessage();
+        }
+    }
+
+    public void SetMessage(string newMessage)
+    {
+        storedText = newMessage;
+
+        if (messageText != null)
+        {
+            messageText.text = newMessage;
+        }
+
+        if (messagePanel != null && messagePanel.activeSelf)
+        {
+            textWriterSingle = TextWriter.AddWriter_Static(messageText, storedText, 0.1f, true, true);
+        }
+    }
+
+    public void ShowMessage()
+    {
+        if (messagePanel != null)
+        {
+            messagePanel.SetActive(true);
+        }
+
+        if (messageText != null)
+        {
+            textWriterSingle = TextWriter.AddWriter_Static(messageText, storedText, 0.1f, true, true);
+        }
+    }
+
+    public void HideMessage()
+    {
+        if (messagePanel != null)
+        {
+            messagePanel.SetActive(false);
         }
     }
 }

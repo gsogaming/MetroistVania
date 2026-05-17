@@ -28,14 +28,23 @@ public class Damage : MonoBehaviour
     public GameObject damageVFX;
     public GameObject damageSFX;
     public Transform vfxLocation;
+    [Tooltip("Optional particle effect to spawn when this damage successfully hits.")]
+    public ParticleSystem hitParticles;
 
-    
+    [Header("Hit Response Settings")]
+    [Tooltip("Whether successful enemy hits briefly freeze time.")]
+    public bool hitPauseOnEnemyHit = true;
+    [Tooltip("How long the hit pause lasts, in real seconds.")]
+    public float hitPauseDuration = 0.05f;
+    [Tooltip("Whether successful enemy hits push enemies away from this damage source.")]
+    public bool knockbackEnemiesOnHit = true;
+    [Tooltip("How far enemies are pushed when hit.")]
+    public float enemyKnockbackDistance = 0.25f;
+    [Tooltip("How long the enemy knockback movement lasts.")]
+    public float enemyKnockbackDuration = 0.08f;
 
-
-
-
-
-
+    private static float hitPauseRestoreTime = 0.0f;
+    private static float timeScaleBeforeHitPause = 1.0f;
 
     /// <summary>
     /// Description:
@@ -106,22 +115,83 @@ public class Damage : MonoBehaviour
             if (collidedHealth.teamId != this.teamId)
             {
                 collidedHealth.TakeDamage(damageAmount);
-                if (damageVFX != null)
-                {
-                    Instantiate(damageVFX, vfxLocation.transform.position, transform.rotation, null);
-                }
-
-                if (damageSFX != null)
-                {
-                    Instantiate(damageSFX, transform.position, transform.rotation, null);
-                }
-
+                EnemyBase hitEnemy = collisionGameObject.GetComponent<EnemyBase>();
+                ApplyHitResponse(hitEnemy, collisionGameObject.transform.position);
+                SpawnHitEffects(collisionGameObject.transform.position);
 
                 if (destroyAfterDamage)
                 {
-                    Destroy(this.gameObject);
+                    DestroyAfterDamage(hitEnemy != null);
                 }
             }
         }
+    }
+
+    private void ApplyHitResponse(EnemyBase hitEnemy, Vector3 hitPosition)
+    {
+        if (hitEnemy == null)
+        {
+            return;
+        }
+
+        if (hitPauseOnEnemyHit && hitPauseDuration > 0.0f)
+        {
+            StartCoroutine(HitPause(hitPauseDuration));
+        }
+
+        if (knockbackEnemiesOnHit && enemyKnockbackDistance > 0.0f && enemyKnockbackDuration > 0.0f)
+        {
+            Vector2 knockbackDirection = hitPosition - transform.position;
+            hitEnemy.ApplyKnockback(knockbackDirection, enemyKnockbackDistance, enemyKnockbackDuration);
+        }
+    }
+
+    private IEnumerator HitPause(float duration)
+    {
+        if (Time.timeScale > 0.0f)
+        {
+            timeScaleBeforeHitPause = Time.timeScale;
+        }
+
+        hitPauseRestoreTime = Mathf.Max(hitPauseRestoreTime, Time.unscaledTime + duration);
+        Time.timeScale = 0.0f;
+
+        while (Time.unscaledTime < hitPauseRestoreTime)
+        {
+            yield return null;
+        }
+
+        Time.timeScale = timeScaleBeforeHitPause;
+    }
+
+    private void SpawnHitEffects(Vector3 hitPosition)
+    {
+        Vector3 effectPosition = vfxLocation != null ? vfxLocation.position : hitPosition;
+
+        if (damageVFX != null)
+        {
+            Instantiate(damageVFX, effectPosition, transform.rotation, null);
+        }
+
+        if (hitParticles != null)
+        {
+            Instantiate(hitParticles, effectPosition, transform.rotation, null);
+        }
+
+        if (damageSFX != null)
+        {
+            Instantiate(damageSFX, transform.position, transform.rotation, null);
+        }
+    }
+
+    private void DestroyAfterDamage(bool hitEnemy)
+    {
+        if (hitEnemy && hitPauseOnEnemyHit && hitPauseDuration > 0.0f)
+        {
+            Destroy(this.gameObject, hitPauseDuration);
+            return;
+        }
+
+        Destroy(this.gameObject);
     }
 }
